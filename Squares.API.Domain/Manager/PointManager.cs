@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Squares.API.DataLayer.Core.Repository;
 using Squares.API.DataLayer.Entities;
-using Squares.API.DataLayer.EntityFrameworkCore;
 using Squares.API.Domain.Dto;
 using System;
 using System.Collections.Generic;
@@ -11,28 +11,36 @@ namespace Squares.API.Domain.Manager
 {
     public class PointManager : IPointManager
     {
-        private SquareDbContext _context;
+        private IEfRepository<Coordinate> _coordinateRepositroy;
         private IMapper _mapper;
 
-        public PointManager(SquareDbContext context, IMapper mapper)
+        public PointManager(IEfRepository<Coordinate> coordinateRepositroy, IMapper mapper)
         {
-            _context = context;
+            _coordinateRepositroy = coordinateRepositroy;
             _mapper = mapper;
         }
+
+        #region Public Methods
+        /// <summary>
+        /// This method is for adding points
+        /// </summary>
+        /// <param name="coordinatesDto"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> AddPoints(List<CoordinateRequestDto> coordinatesDto, int userId)
         {
             try
             {
                 List<Coordinate> listCoordinates = _mapper.Map<List<Coordinate>>(coordinatesDto);
 
-                 Parallel.ForEach(listCoordinates, new ParallelOptions { MaxDegreeOfParallelism = 8 }, async (coordinate) => {
-                     coordinate.UserId = userId;
+                // Parallel.ForEach(listCoordinates, new ParallelOptions { MaxDegreeOfParallelism = 8 }, async (coordinate) => {
+                //   coordinate.UserId = userId;
 
-                    await _context.Points.AddRangeAsync(coordinate);
+                listCoordinates.ForEach(x => x.UserId = userId);
 
-                    await _context.SaveChangesAsync();
+                await _coordinateRepositroy.AddRangeAsync(listCoordinates);
 
-                });
+                //  });
 
                 return true;
             }
@@ -42,17 +50,21 @@ namespace Squares.API.Domain.Manager
             }
         }
 
+        /// <summary>
+        /// This method is for deleting point
+        /// </summary>
+        /// <param name="coordinateDto"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<bool> Delete(CoordinateRequestDto coordinateDto, int userId)
         {
             try
             {
-                var data = _context.Points.Where(x => x.X == coordinateDto.X && x.Y == coordinateDto.Y && x.UserId == userId).First();
+                var data = await _coordinateRepositroy.FindSingleAsync(x => x.X == coordinateDto.X && x.Y == coordinateDto.Y && x.UserId == userId);
 
                 if (data != null)
                 {
-                    _context.Points.Remove(data);
-
-                    await _context.SaveChangesAsync();
+                   await _coordinateRepositroy.Delete(data);
 
                     return true;
                 }
@@ -65,79 +77,117 @@ namespace Squares.API.Domain.Manager
         }
 
 
+        /// <summary>
+        /// This method is for calculating number of squares
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public int CalculateSquare(int userId)
         {
             int count = 0;
-            var points = _context.Points.Where(x => x.UserId == userId).ToList();
+            var points = _coordinateRepositroy.FindAllAsync().Where(x => x.UserId == userId).ToArray();
+            int value = 0;
 
-            if (points.Count < 4)
+            Dictionary<string, int> map = new Dictionary<string, int>();
+
+            for (int i = 0; i < points.Length - 1; i++)
             {
-                return count;
-            }
-            for (int i = 3; i < points.Count; i++)
-            {
-                for (int k = 2; k < points.Count; k++)
+                for (int j = i + 1; j < points.Length; j++)
                 {
-                    for (int j = 1; j < points.Count; j++)
-                    {
-                        for (int l = 0; l < points.Count; l++)
-                        {
-                            if (isSquare(points[l],points[j],points[k],points[i]))
-                            {
-                                count = count + 1;
-                            }
-                        }
-                    }
+                    if (!check(points[i], points[j])) continue;
+                    string str = genStr(points[i], points[j]);
+                    if (!map.TryGetValue(str, out value))
+                        map.Add(str, 1);
+                    else
+                        map.Add(str, 1 + map[str]);
                 }
             }
-
+            for (int i = 0; i < points.Length - 1; i++)
+            {
+                for (int j = i + 1; j < points.Length; j++)
+                {
+                    if (!check(points[i], points[j])) continue;
+                    string diag = createDiag(points[i], points[j]);
+                    if (diag.Length == 0) continue;
+                    if (map.TryGetValue(diag, out value))
+                        count += map[diag];
+                }
+            }
             return count;
-        }
+        } 
+        #endregion
 
 
+        #region Private Methods
 
-        // A utility function to find square of distance
-        // from point 'p' to point 'q'
-        private static int distSq(Coordinate p, Coordinate q)
+        /// <summary>
+        /// Checking point are same
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        private bool check(Coordinate p1, Coordinate p2)
         {
-            return (p.X - q.X) * (p.X - q.X) + (p.Y - q.Y) * (p.Y - q.Y);
+            if (p1.X == p2.X && p1.Y == p2.Y) return false;
+            return true;
         }
 
-        // This function returns true if (p1, p2, p3, p4) form a
-        // square, otherwise false
-        private static bool isSquare(Coordinate p1, Coordinate p2, Coordinate p3, Coordinate p4)
+        /// <summary>
+        /// Generating sting from coordinates
+        /// </summary>
+        /// <param name="p1"></param>
+        /// <param name="p2"></param>
+        /// <returns></returns>
+        private string genStr(Coordinate p1, Coordinate p2)
         {
-            int d2 = distSq(p1, p2); // from p1 to p2
-            int d3 = distSq(p1, p3); // from p1 to p3
-            int d4 = distSq(p1, p4); // from p1 to p4
-
-            if (d2 == 0 || d3 == 0 || d4 == 0)
-                return false;
-
-            // If lengths if (p1, p2) and (p1, p3) are same, then
-            // following conditions must met to form a square.
-            // 1) Square of length of (p1, p4) is same as twice
-            // the square of (p1, p2)
-            // 2) Square of length of (p2, p3) is same
-            // as twice the square of (p2, p4)
-            if (d2 == d3 && 2 * d2 == d4
-                && 2 * distSq(p2, p4) == distSq(p2, p3))
+            if (p1.X < p2.X || (p1.X == p2.X && p1.Y < p2.Y))
             {
-                return true;
+                return string.Format("{0},{1};{2},{3}", p1.X, p1.Y, p2.X, p2.Y);
+            }
+            else
+            {
+                return string.Format("{0},{1};{2},{3}", p2.X, p2.Y, p1.X, p1.Y);
             }
 
-            // The below two cases are similar to above case
-            if (d3 == d4 && 2 * d3 == d2
-                && 2 * distSq(p3, p2) == distSq(p3, p4))
-            {
-                return true;
-            }
-            if (d2 == d4 && 2 * d2 == d3
-                && 2 * distSq(p2, p3) == distSq(p2, p4))
-            {
-                return true;
-            }
-            return false;
         }
+
+        /// <summary>
+        /// Generating diagonal from coordinates
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="c"></param>
+        /// <returns></returns>
+        private string createDiag(Coordinate a, Coordinate c)
+        {
+            int midX = a.X + c.X;
+            int midY = a.Y + c.Y;
+
+            int Ax = 2 * a.X - midX;
+            int Ay = 2 * a.Y - midY;
+            int bX = midX - Ay;
+            int bY = midY + Ax;
+
+            int cX = 2 * c.X - midX;
+            int cY = 2 * c.Y - midY;
+            int dX = midX - cY;
+            int dY = midY + cX;
+            if ((bX & 1) == 0 && (bY & 1) == 0 && (dX & 1) == 0 && (dY & 1) == 0)
+            {
+                if (bX < dX || (bX == dX && bY < dY))
+                {
+                    return string.Format("{0},{1};{2},{3}", bX / 2, bY / 2, dX / 2, dY / 2);
+                }
+                else
+                {
+                    return string.Format("{0},{1};{2},{3}", dX / 2, dY / 2, bX / 2, bY / 2);
+                }
+            }
+            else
+            {
+                return "";
+            }
+        } 
+        #endregion
+
     }
 }

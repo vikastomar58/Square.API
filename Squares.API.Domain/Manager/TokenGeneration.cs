@@ -15,6 +15,13 @@ namespace Squares.API.Domain.Manager
         {
             _config = config;
         }
+
+        #region Public Methods
+        /// <summary>
+        /// This method is for token generation after validating user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <returns></returns>
         public string GenerateToken(UserDetail user)
         {
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JWT:Key"]));
@@ -34,6 +41,7 @@ namespace Squares.API.Domain.Manager
                 , signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+        } 
+        #endregion
     }
 }

@@ -1,0 +1,10 @@
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\bin\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.deps.json
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\bin\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.dll
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\bin\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.pdb
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.csproj.AssemblyReference.cache
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.GeneratedMSBuildEditorConfig.editorconfig
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.AssemblyInfoInputs.cache
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.AssemblyInfo.cs
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.csproj.CoreCompileInputs.cache
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.dll
+D:\Assignment\Squares\Squares.API\Squares.API.DataLayer.Core\obj\Debug\netcoreapp3.1\Squares.API.DataLayer.Core.pdb

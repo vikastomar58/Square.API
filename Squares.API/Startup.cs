@@ -8,6 +8,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Squares.API.DataLayer.Core.Repository;
 using Squares.API.DataLayer.EntityFrameworkCore;
 using Squares.API.Domain.Manager;
 using Squares.API.Domain.Mapping;
@@ -37,6 +38,12 @@ namespace Squares.API
 
             services.AddScoped<ITokenGeneration, TokenGeneration>();
             services.AddScoped<IPointManager, PointManager>();
+
+            services.AddScoped<ISquareUOW, SquareUnitOfWork>();
+
+            services.AddScoped(typeof(IEfRepository<>),typeof(EfRepository<>));
+
+
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
