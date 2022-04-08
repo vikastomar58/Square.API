@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lbpsW4C3B2dxscxi8DKqdp3/alIiIsGzEYZsSPccztVK9qRFhCocITxvXVRsLjykdtQWePWHltLhPv94P9csvg==",
+  "dgSpecHash": "AzvOxNQmoCSlFrr52RppBYJnM2oIJ1JpkQJ6AWjHeB5yBywFjXPsm9vs2R9wyeGEiNi3iUpV9tIYbpJ+5tEe/Q==",
   "success": true,
-  "projectFilePath": "D:\\Assignment\\Squares\\Squares.API\\Squares.API\\Squares.API.csproj",
+  "projectFilePath": "D:\\Assignment\\Squares.API\\Squares.API\\Squares.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\vikas04\\.nuget\\packages\\automapper\\11.0.0\\automapper.11.0.0.nupkg.sha512",
     "C:\\Users\\vikas04\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\11.0.0\\automapper.extensions.microsoft.dependencyinjection.11.0.0.nupkg.sha512",

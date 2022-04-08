@@ -94,8 +94,8 @@ namespace Squares.API.Domain.Manager
             {
                 for (int j = i + 1; j < points.Length; j++)
                 {
-                    if (!check(points[i], points[j])) continue;
-                    string str = genStr(points[i], points[j]);
+                    if (!Check(points[i], points[j])) continue;
+                    string str = GenerateStr(points[i], points[j]);
                     if (!map.TryGetValue(str, out value))
                         map.Add(str, 1);
                     else
@@ -106,8 +106,8 @@ namespace Squares.API.Domain.Manager
             {
                 for (int j = i + 1; j < points.Length; j++)
                 {
-                    if (!check(points[i], points[j])) continue;
-                    string diag = createDiag(points[i], points[j]);
+                    if (!Check(points[i], points[j])) continue;
+                    string diag = CreateDiag(points[i], points[j]);
                     if (diag.Length == 0) continue;
                     if (map.TryGetValue(diag, out value))
                         count += map[diag];
@@ -126,7 +126,7 @@ namespace Squares.API.Domain.Manager
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        private bool check(Coordinate p1, Coordinate p2)
+        private bool Check(Coordinate p1, Coordinate p2)
         {
             if (p1.X == p2.X && p1.Y == p2.Y) return false;
             return true;
@@ -138,7 +138,7 @@ namespace Squares.API.Domain.Manager
         /// <param name="p1"></param>
         /// <param name="p2"></param>
         /// <returns></returns>
-        private string genStr(Coordinate p1, Coordinate p2)
+        private string GenerateStr(Coordinate p1, Coordinate p2)
         {
             if (p1.X < p2.X || (p1.X == p2.X && p1.Y < p2.Y))
             {
@@ -157,7 +157,7 @@ namespace Squares.API.Domain.Manager
         /// <param name="a"></param>
         /// <param name="c"></param>
         /// <returns></returns>
-        private string createDiag(Coordinate a, Coordinate c)
+        private string CreateDiag(Coordinate a, Coordinate c)
         {
             int midX = a.X + c.X;
             int midY = a.Y + c.Y;

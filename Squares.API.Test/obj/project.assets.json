@@ -10560,11 +10560,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Assignment\\Squares\\Squares.API\\Squares.API.Test\\Squares.API.Test.csproj",
+      "projectUniqueName": "D:\\Assignment\\Squares.API\\Squares.API.Test\\Squares.API.Test.csproj",
       "projectName": "Squares.API.Test",
-      "projectPath": "D:\\Assignment\\Squares\\Squares.API\\Squares.API.Test\\Squares.API.Test.csproj",
+      "projectPath": "D:\\Assignment\\Squares.API\\Squares.API.Test\\Squares.API.Test.csproj",
       "packagesPath": "C:\\Users\\vikas04\\.nuget\\packages\\",
-      "outputPath": "D:\\Assignment\\Squares\\Squares.API\\Squares.API.Test\\obj\\",
+      "outputPath": "D:\\Assignment\\Squares.API\\Squares.API.Test\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
@@ -10585,8 +10585,8 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "D:\\Assignment\\Squares\\Squares.API\\Squares.API.Domain\\Squares.API.Domain.csproj": {
-              "projectPath": "D:\\Assignment\\Squares\\Squares.API\\Squares.API.Domain\\Squares.API.Domain.csproj"
+            "D:\\Assignment\\Squares.API\\Squares.API.Domain\\Squares.API.Domain.csproj": {
+              "projectPath": "D:\\Assignment\\Squares.API\\Squares.API.Domain\\Squares.API.Domain.csproj"
             }
           }
         }
