@@ -35,3 +35,9 @@ bld/
 *.[Cc]ache
 
 
+/Squares.API/bin
+/Squares.API/obj
+/Squares.API.DataLayer/bin
+/Squares.API.DataLayer/obj
+bin
+obj
