@@ -41,3 +41,7 @@ bld/
 /Squares.API.DataLayer/obj
 bin
 obj
+/Squares.API.Domain/bin
+/Squares.API.Domain/obj
+bin
+obj
