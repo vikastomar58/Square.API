@@ -8,7 +8,7 @@ Below are few points:-
 * It also provide swagger document while running.
 
 Build and run the appliction:-
-* After opening the command line interface at the root level run command ##dotnet build
-* After successfull completion of above command run command ##dotnet run --project Squares.API/Squares.API.csproj
+* After opening the command line interface at the root level run command ## dotnet build
+* After successfull completion of above command run command ## dotnet run --project Squares.API/Squares.API.csproj
 * It will start the api and will tell on which port it is listening the request.
 * You can stop it by pressing ctrl+c on command line interface.
