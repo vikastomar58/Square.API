@@ -7,8 +7,22 @@ Below are few points:-
 * It uses Entity Frame work core to communicate with SQL Server.
 * It also provide swagger document while running.
 
-Build and run the appliction:-
-* After opening the command line interface at the root level run command ## dotnet build
-* After successfull completion of above command run command ## dotnet run --project Squares.API/Squares.API.csproj
+Building and running the application:-
+* After opening the command line interface at the root level run command **dotnet build**
+* After successful completion of above command run command **dotnet run --project Squares.API/Squares.API.csproj**
 * It will start the api and will tell on which port it is listening the request.
-* You can stop it by pressing ctrl+c on command line interface.
+* You can stop it by pressing **ctrl+c** on command line interface.
+
+Controllers:-
+* RegisterController - This controller contains 2 methods
+	1. SignUp - To register the user by providing uer details in body
+	2. Login - This method returns token for authenticated user.
+
+* SquareController - This controller has 4 methods
+	1. Post - This method is used to add an array of points into the database for log in user.
+	2. Get("Upload") - This method is used to upload points for a Json file for log in user.
+	3. Get - This method returns the number of squares for log in user.
+	4. Delete - This method delete a Point from database for log in user.
+	
+
+This api is build to communicate with SQL Server. So befor running you need to change the connectionstring in appsettinds.json file.
