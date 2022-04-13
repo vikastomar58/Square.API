@@ -25,4 +25,4 @@ Controllers:-
 	4. Delete - This method delete a Point from database for log in user.
 	
 
-This api is build to communicate with SQL Server. So befor running you need to change the connectionstring in appsettinds.json file.
+In order to work for this API it requires SQL Server. So before running you need to change the connectionstring in appsettings.json file.
