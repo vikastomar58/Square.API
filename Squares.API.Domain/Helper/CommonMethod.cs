@@ -6,6 +6,12 @@ namespace Squares.API.Domain.Helper
 {
     public static class CommonMethod
     {
+        /// <summary>
+        /// This method is for encrypting the password with salt
+        /// </summary>
+        /// <param name="password"></param>
+        /// <param name="salt"></param>
+        /// <returns></returns>
         public static string Encryption(string password,string salt)
         {
             if (string.IsNullOrWhiteSpace(password))
@@ -14,6 +20,12 @@ namespace Squares.API.Domain.Helper
 
             return HashPassword(password);
         }
+
+        /// <summary>
+        /// This method is for hashing saltPassword
+        /// </summary>
+        /// <param name="saltPassword"></param>
+        /// <returns></returns>
        private static string HashPassword(string saltPassword)
         {
             using var sha = SHA256.Create();

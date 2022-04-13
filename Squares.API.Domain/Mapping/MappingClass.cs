@@ -13,7 +13,6 @@ namespace Squares.API.Domain.Mapping
                 .ForMember(des => des.Password, act => act.MapFrom(src => CommonMethod.Encryption(src.Password,src.Salt)));
 
             CreateMap<CoordinateRequestDto, Coordinate>().ReverseMap();
-               // .ForMember(des => des.UserId, act => act.MapFrom(src => CommonMethod.GetUserId()));
         }
     }
 }

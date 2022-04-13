@@ -1,26 +1,33 @@
 ﻿using AutoMapper;
+using Squares.API.DataLayer.Core.Repository;
 using Squares.API.DataLayer.Entities;
-using Squares.API.DataLayer.EntityFrameworkCore;
 using Squares.API.Domain.Dto;
 using Squares.API.Domain.Helper;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Squares.API.Domain.Manager
 {
     public class RegistrationManager : IRegistrationManager
     {
-        private SquareDbContext _context;
+        private IEfRepository<UserDetail> _userDetailRepository;
         private IMapper _mapper;
-        public RegistrationManager(SquareDbContext context, IMapper mapper)
+
+        public RegistrationManager(IEfRepository<UserDetail> userDetailRepository, IMapper mapper)
         {
-            _context = context;
+            _userDetailRepository = userDetailRepository;
             _mapper = mapper;
         }
+        #region Public Methods
+
+        /// <summary>
+        /// This method is for validating the user
+        /// </summary>
+        /// <param name="loginRequest"></param>
+        /// <returns></returns>
         public UserDetail LogIn(LoginRequestDto loginRequest)
         {
-           var user=_context.UserDetails.FirstOrDefault(x=>x.Email.ToLower()==loginRequest.Email.ToLower());
+            var user = _userDetailRepository.FindSingleAsync(x => x.Email.ToLower() == loginRequest.Email.ToLower()).Result;
 
             if (user != null && ValidatePassword(user, loginRequest.Password))
             {
@@ -32,24 +39,22 @@ namespace Squares.API.Domain.Manager
             }
         }
 
-        private bool ValidatePassword(UserDetail user, string password)
-        {
-            if (string.Equals(user.Password, CommonMethod.Encryption(password,user.Salt), StringComparison.OrdinalIgnoreCase))
-                return true;
-            return false;
-        }
-
+        /// <summary>
+        /// This method is for adding user record
+        /// </summary>
+        /// <param name="signUpRequest"></param>
+        /// <returns></returns>
         public async Task<bool> SignUp(SignUpRequestDto signUpRequest)
         {
             try
             {
-                var user = _context.UserDetails.FirstOrDefault(x => x.Email.ToLower() == signUpRequest.Email.ToLower());
+                var user = _userDetailRepository.FindSingleAsync(x => x.Email.ToLower() == signUpRequest.Email.ToLower()).Result;
                 if (user == null)
-                {                    
+                {
                     UserDetail userDetail = _mapper.Map<UserDetail>(signUpRequest);
 
-                    await _context.UserDetails.AddAsync(userDetail);
-                    await _context.SaveChangesAsync();
+                    await _userDetailRepository.AddAsync(userDetail);
+
                     return true;
                 }
                 else
@@ -57,10 +62,28 @@ namespace Squares.API.Domain.Manager
                     return false;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw;
             }
-        }
+        } 
+        #endregion
+
+        #region Private Method
+
+        /// <summary>
+        /// This method is for validating the password
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="password"></param>
+        /// <returns></returns>
+        private bool ValidatePassword(UserDetail user, string password)
+        {
+            if (string.Equals(user.Password, CommonMethod.Encryption(password, user.Salt), StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        } 
+
+        #endregion
     }
 }
