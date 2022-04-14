@@ -8,10 +8,16 @@ Below are few points:-
 * It also provide swagger document while running.
 
 Building and running the application:-
-* After opening the command line interface at the root level run command **dotnet build**
-* After successful completion of above command run command **dotnet run --project Squares.API/Squares.API.csproj**
-* It will start the api and will tell on which port it is listening the request.
-* You can stop it by pressing **ctrl+c** on command line interface.
+* Through Command Line Infertace - 
+	1. After opening the command line interface at the root level run command **dotnet build**
+	2. After successful completion of above command run command **dotnet run --project Squares.API/Squares.API.csproj**
+	3. It will start the api and will tell on which port it is listening the request.
+	4. You can stop it by pressing **ctrl+c** on command line interface.
+	
+* Through Docker - 
+	1. You must have Docker hub installed on your sytem.
+	2. Open the command line interface at root level directory of project and run **docker build -t squareapi -f Dockerfile .**
+	3. After completion of above command run **docker run -p 8080:80 --name app squareapi**
 
 Controllers:-
 * RegisterController - This controller contains 2 methods
