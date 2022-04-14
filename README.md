@@ -14,7 +14,7 @@ Building and running the application:-
 	3. It will start the api and will tell on which port it is listening the request.
 	4. You can stop it by pressing **ctrl+c** on command line interface.
 	
-Through Docker - 
+* Through Docker - 
 	1. You must have Docker hub installed on your sytem.
 	2. Open the command line interface at root level directory of project and run **docker build -t squareapi -f Dockerfile .**
 	3. After completion of above command run **docker run -p 8080:80 --name app squareapi**
