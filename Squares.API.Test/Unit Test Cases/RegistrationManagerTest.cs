@@ -8,16 +8,15 @@ using Squares.API.Domain.Mapping;
 using Squares.API.Test.FixtureData;
 using System;
 using System.Linq.Expressions;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Squares.API.Test.Unit_Test_Cases
 {
     public class RegistrationManagerTest
     {
-        private IRegistrationManager _registrationManager;
-        private IMapper _mapper;
-        private Mock<IEfRepository<UserDetail>> _efRepositoryUserDetail;
+        private readonly IRegistrationManager _registrationManager;
+        private readonly IMapper _mapper;
+        private readonly Mock<IEfRepository<UserDetail>> _efRepositoryUserDetail;
 
         public RegistrationManagerTest()
         {

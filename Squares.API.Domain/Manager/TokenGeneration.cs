@@ -10,7 +10,7 @@ namespace Squares.API.Domain.Manager
 {
     public class TokenGeneration : ITokenGeneration
     {
-        private IConfiguration _config;
+        private readonly IConfiguration _config;
         public TokenGeneration(IConfiguration config)
         {
             _config = config;

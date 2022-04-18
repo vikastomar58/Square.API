@@ -24,7 +24,7 @@ namespace Squares.API.Controllers
     public class SquareController : ControllerBase
     {
         private int _userId;
-        private IPointManager _pointManager;
+        private readonly IPointManager _pointManager;
         public SquareController(IPointManager pointManager)
         {
             _pointManager = pointManager;

@@ -15,7 +15,7 @@ namespace Squares.API.DataLayer.Core.Repository
 
         public DbContext dbContext { get ; set ; }
 
-        public EfRepository(ISquareUOW squareUOW)
+        public EfRepository(ISquareUow squareUOW)
         {
             dbContext = squareUOW.dbContext;
             Set = this.dbContext.Set<TEntity>();

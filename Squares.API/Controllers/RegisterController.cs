@@ -1,11 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Squares.API.Domain.Dto;
 using Squares.API.Domain.Helper;
 using Squares.API.Domain.Manager;
 using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 
 namespace Squares.API.Controllers
 {
@@ -18,8 +18,8 @@ namespace Squares.API.Controllers
     [AllowAnonymous]
     public class RegisterController : ControllerBase
     {
-        private IRegistrationManager _registrationManager;
-        private ITokenGeneration _tokenGeneration;
+        private readonly IRegistrationManager _registrationManager;
+        private readonly ITokenGeneration _tokenGeneration;
         public RegisterController(IRegistrationManager registrationManager, ITokenGeneration tokenGeneration)
         {
             _registrationManager = registrationManager;
