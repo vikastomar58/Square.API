@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Squares.API.DataLayer.EntityFrameworkCore
 {
-   public interface ISquareUOW
+   public interface ISquareUow
     {
         public DbContext dbContext { get; set; }
     }

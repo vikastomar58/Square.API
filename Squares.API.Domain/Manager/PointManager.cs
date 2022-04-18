@@ -2,7 +2,6 @@
 using Squares.API.DataLayer.Core.Repository;
 using Squares.API.DataLayer.Entities;
 using Squares.API.Domain.Dto;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,8 +10,8 @@ namespace Squares.API.Domain.Manager
 {
     public class PointManager : IPointManager
     {
-        private IEfRepository<Coordinate> _coordinateRepositroy;
-        private IMapper _mapper;
+        private readonly IEfRepository<Coordinate> _coordinateRepositroy;
+        private readonly IMapper _mapper;
 
         public PointManager(IEfRepository<Coordinate> coordinateRepositroy, IMapper mapper)
         {
@@ -29,25 +28,14 @@ namespace Squares.API.Domain.Manager
         /// <returns></returns>
         public async Task<bool> AddPoints(List<CoordinateRequestDto> coordinatesDto, int userId)
         {
-            try
-            {
-                List<Coordinate> listCoordinates = _mapper.Map<List<Coordinate>>(coordinatesDto);
+            List<Coordinate> listCoordinates = _mapper.Map<List<Coordinate>>(coordinatesDto);
 
-                // Parallel.ForEach(listCoordinates, new ParallelOptions { MaxDegreeOfParallelism = 8 }, async (coordinate) => {
-                //   coordinate.UserId = userId;
+            listCoordinates.ForEach(x => x.UserId = userId);
 
-                listCoordinates.ForEach(x => x.UserId = userId);
+            await _coordinateRepositroy.AddRangeAsync(listCoordinates);
 
-                await _coordinateRepositroy.AddRangeAsync(listCoordinates);
+            return true;
 
-                //  });
-
-                return true;
-            }
-            catch (Exception)
-            {
-                throw;
-            }
         }
 
         /// <summary>
@@ -58,22 +46,15 @@ namespace Squares.API.Domain.Manager
         /// <returns></returns>
         public async Task<bool> Delete(CoordinateRequestDto coordinateDto, int userId)
         {
-            try
-            {
-                var data = await _coordinateRepositroy.FindSingleAsync(x => x.X == coordinateDto.X && x.Y == coordinateDto.Y && x.UserId == userId);
+            var data = await _coordinateRepositroy.FindSingleAsync(x => x.X == coordinateDto.X && x.Y == coordinateDto.Y && x.UserId == userId);
 
-                if (data != null)
-                {
-                   await _coordinateRepositroy.Delete(data);
-
-                    return true;
-                }
-                return false;
-            }
-            catch (Exception)
+            if (data != null)
             {
-                throw;
+                await _coordinateRepositroy.Delete(data);
+
+                return true;
             }
+            return false;
         }
 
 
@@ -114,7 +95,7 @@ namespace Squares.API.Domain.Manager
                 }
             }
             return count;
-        } 
+        }
         #endregion
 
 
@@ -186,7 +167,7 @@ namespace Squares.API.Domain.Manager
             {
                 return "";
             }
-        } 
+        }
         #endregion
 
     }

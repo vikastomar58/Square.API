@@ -25,7 +25,7 @@ namespace Squares.API.DataLayer.EntityFrameworkCore
         }
     }
 
-    public class SquareUnitOfWork:ISquareUOW
+    public class SquareUnitOfWork:ISquareUow
     {
         public SquareUnitOfWork(SquareDbContext context)
         {

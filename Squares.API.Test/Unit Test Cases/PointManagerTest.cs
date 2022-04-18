@@ -18,9 +18,9 @@ namespace Squares.API.Test.Unit_Test_Cases
 {
     public class PointManagerTest
     {
-        private IPointManager _pointManager;
-        private IMapper _mapper;
-        private Mock<IEfRepository<Coordinate>> _efRepositoryCoordinate;
+        private readonly IPointManager _pointManager;
+        private readonly IMapper _mapper;
+        private readonly Mock<IEfRepository<Coordinate>> _efRepositoryCoordinate;
 
         public PointManagerTest()
         {

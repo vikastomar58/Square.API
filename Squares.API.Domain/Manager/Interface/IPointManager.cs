@@ -6,9 +6,9 @@ namespace Squares.API.Domain.Manager
 {
     public interface IPointManager
     {
-        Task<bool> AddPoints(List<CoordinateRequestDto> points, int userId);
+        Task<bool> AddPoints(List<CoordinateRequestDto> coordinatesDto, int userId);
 
-        Task<bool> Delete(CoordinateRequestDto point, int userId);
+        Task<bool> Delete(CoordinateRequestDto coordinateDto, int userId);
 
         int CalculateSquare(int userId);
     }

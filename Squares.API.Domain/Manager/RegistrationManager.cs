@@ -10,8 +10,8 @@ namespace Squares.API.Domain.Manager
 {
     public class RegistrationManager : IRegistrationManager
     {
-        private IEfRepository<UserDetail> _userDetailRepository;
-        private IMapper _mapper;
+        private readonly IEfRepository<UserDetail> _userDetailRepository;
+        private readonly IMapper _mapper;
 
         public RegistrationManager(IEfRepository<UserDetail> userDetailRepository, IMapper mapper)
         {
@@ -46,27 +46,21 @@ namespace Squares.API.Domain.Manager
         /// <returns></returns>
         public async Task<bool> SignUp(SignUpRequestDto signUpRequest)
         {
-            try
-            {
-                var user = _userDetailRepository.FindSingleAsync(x => x.Email.ToLower() == signUpRequest.Email.ToLower()).Result;
-                if (user == null)
-                {
-                    UserDetail userDetail = _mapper.Map<UserDetail>(signUpRequest);
 
-                    await _userDetailRepository.AddAsync(userDetail);
-
-                    return true;
-                }
-                else
-                {
-                    return false;
-                }
-            }
-            catch (Exception ex)
+            var user = _userDetailRepository.FindSingleAsync(x => x.Email.ToLower() == signUpRequest.Email.ToLower()).Result;
+            if (user == null)
             {
-                throw;
+                UserDetail userDetail = _mapper.Map<UserDetail>(signUpRequest);
+
+                await _userDetailRepository.AddAsync(userDetail);
+
+                return true;
             }
-        } 
+            else
+            {
+                return false;
+            }
+        }
         #endregion
 
         #region Private Method
@@ -82,7 +76,7 @@ namespace Squares.API.Domain.Manager
             if (string.Equals(user.Password, CommonMethod.Encryption(password, user.Salt), StringComparison.OrdinalIgnoreCase))
                 return true;
             return false;
-        } 
+        }
 
         #endregion
     }

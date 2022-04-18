@@ -39,7 +39,7 @@ namespace Squares.API
             services.AddScoped<ITokenGeneration, TokenGeneration>();
             services.AddScoped<IPointManager, PointManager>();
 
-            services.AddScoped<ISquareUOW, SquareUnitOfWork>();
+            services.AddScoped<ISquareUow, SquareUnitOfWork>();
 
             services.AddScoped(typeof(IEfRepository<>),typeof(EfRepository<>));
 
