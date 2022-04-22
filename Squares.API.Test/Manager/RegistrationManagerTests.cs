@@ -12,19 +12,19 @@ using Xunit;
 
 namespace Squares.API.Test.Unit_Test_Cases
 {
-    public class RegistrationManagerTest
+    public class RegistrationManagerTests
     {
-        private readonly IRegistrationManager _registrationManager;
+        private readonly IIdentityManager _registrationManager;
         private readonly IMapper _mapper;
         private readonly Mock<IEfRepository<UserDetail>> _efRepositoryUserDetail;
 
-        public RegistrationManagerTest()
+        public RegistrationManagerTests()
         {
             _mapper = new MapperConfiguration(c =>
-                              c.AddProfile<MappingClass>()).CreateMapper();
+                              c.AddProfile<MapperProfile>()).CreateMapper();
             _efRepositoryUserDetail = new Mock<IEfRepository<UserDetail>>();
 
-            _registrationManager = new RegistrationManager(_efRepositoryUserDetail.Object,_mapper);
+            _registrationManager = new IdentityManager(_efRepositoryUserDetail.Object,_mapper);
 
         }
 

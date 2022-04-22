@@ -5,12 +5,12 @@ using Squares.API.Domain.Helper;
 
 namespace Squares.API.Domain.Mapping
 {
-    public class MappingClass:Profile
+    public class MapperProfile:Profile
     {
-        public MappingClass()
+        public MapperProfile()
         {
             CreateMap<SignUpRequestDto, UserDetail>()
-                .ForMember(des => des.Password, act => act.MapFrom(src => CommonMethod.Encryption(src.Password,src.Salt)));
+                .ForMember(des => des.Password, act => act.MapFrom(src => HashingHelper.Encryption(src.Password,src.Salt)));
 
             CreateMap<CoordinateRequestDto, Coordinate>().ReverseMap();
         }

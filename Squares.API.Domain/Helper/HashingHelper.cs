@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Squares.API.Domain.Helper
 {
-    public static class CommonMethod
+    public static class HashingHelper
     {
         /// <summary>
         /// This method is for encrypting the password with salt

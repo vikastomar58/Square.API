@@ -8,12 +8,12 @@ using System.Threading.Tasks;
 
 namespace Squares.API.Domain.Manager
 {
-    public class RegistrationManager : IRegistrationManager
+    public class IdentityManager : IIdentityManager
     {
         private readonly IEfRepository<UserDetail> _userDetailRepository;
         private readonly IMapper _mapper;
 
-        public RegistrationManager(IEfRepository<UserDetail> userDetailRepository, IMapper mapper)
+        public IdentityManager(IEfRepository<UserDetail> userDetailRepository, IMapper mapper)
         {
             _userDetailRepository = userDetailRepository;
             _mapper = mapper;
@@ -33,10 +33,8 @@ namespace Squares.API.Domain.Manager
             {
                 return user;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         /// <summary>
@@ -56,10 +54,8 @@ namespace Squares.API.Domain.Manager
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
         #endregion
 
@@ -73,7 +69,7 @@ namespace Squares.API.Domain.Manager
         /// <returns></returns>
         private bool ValidatePassword(UserDetail user, string password)
         {
-            if (string.Equals(user.Password, CommonMethod.Encryption(password, user.Salt), StringComparison.OrdinalIgnoreCase))
+            if (string.Equals(user.Password, HashingHelper.Encryption(password, user.Salt), StringComparison.OrdinalIgnoreCase))
                 return true;
             return false;
         }

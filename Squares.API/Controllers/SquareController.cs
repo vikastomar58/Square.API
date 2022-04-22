@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using Squares.API.Domain.Constant;
 using Squares.API.Domain.Dto;
-using Squares.API.Domain.Helper;
 using Squares.API.Domain.Manager;
 using System;
 using System.Collections.Generic;
@@ -36,48 +36,23 @@ namespace Squares.API.Controllers
         /// <param name="points"></param>
         /// <returns></returns>
         [HttpPost]
-        [ProducesResponseType(typeof(ResponseDto),StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<ResponseDto> Add(List<CoordinateRequestDto> points)
         {
             var response = new ResponseDto();
-            try
-            {
-                setUser();
-                if (await _pointManager.AddPoints(points, _userId))
-                {
-                    response.Data =GlobalConstant.CoordinateCreatedMessage;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.SuccessCode
-                    };
-                }
 
-            }
-            catch (Exception ex)
+            setUser();
+            await _pointManager.AddPoints(points, _userId);
+
+            response.Data = Constants.CoordinateCreatedMessage;
+            response.MetaData = new ResponseMetaData
             {
-                response.Data = string.Empty;
-                response.MetaData = new ResponseMetaData
-                {
-                    Code = GlobalConstant.ErrorCode,
-                    Message = ex.Message
-                };
-            }
+                Code = Constants.SuccessCode
+            };
             return response;
-        }
-
-        private void setUser()
-        {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-
-            if(identity!=null)
-            {
-                var user = identity.Claims;
-
-                _userId =Convert.ToInt32(user.FirstOrDefault(o => o.Type == "Id")?.Value);
-            }
         }
 
         /// <summary>
@@ -92,25 +67,15 @@ namespace Squares.API.Controllers
         public ResponseDto GetSquareCount()
         {
             var response = new ResponseDto();
-            try
-            {
-                setUser();
-                response.Data = _pointManager.CalculateSquare(_userId).ToString();
 
-                response.MetaData = new ResponseMetaData
-                {
-                    Code = GlobalConstant.SuccessCode
-                };
-            }
-            catch (Exception ex)
+            setUser();
+            response.Data = _pointManager.CalculateSquare(_userId).ToString();
+
+            response.MetaData = new ResponseMetaData
             {
-                response.Data = string.Empty;
-                response.MetaData = new ResponseMetaData
-                {
-                    Code = GlobalConstant.ErrorCode,
-                    Message = ex.Message
-                };
-            }
+                Code = Constants.SuccessCode
+            };
+
 
             return response;
         }
@@ -129,36 +94,15 @@ namespace Squares.API.Controllers
         {
             var response = new ResponseDto();
 
-            try
+            setUser();
+            await _pointManager.Delete(point, _userId);
+
+            response.Data = Constants.CoordinateDeletedMessage;
+            response.MetaData = new ResponseMetaData
             {
-                setUser();
-                if (await _pointManager.Delete(point, _userId))
-                {
-                    response.Data = GlobalConstant.CoordinateDeletedMessage;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.SuccessCode
-                    };
-                }
-                else
-                {
-                    response.Data = string.Empty;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.ErrorCode,
-                        Message=GlobalConstant.CoordinateNotFoundMessage
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Data = string.Empty;
-                response.MetaData = new ResponseMetaData
-                {
-                    Code = GlobalConstant.ErrorCode,
-                    Message = ex.Message
-                };
-            }
+                Code = Constants.SuccessCode
+            };
+
             return response;
         }
 
@@ -173,46 +117,54 @@ namespace Squares.API.Controllers
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status403Forbidden)]
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseDto> Upload([FromQuery]string filePath)
+        public async Task<ResponseDto> Upload([FromQuery] string filePath)
         {
             var response = new ResponseDto();
 
-            try
+
+            FileInfo file = new FileInfo(filePath);
+            if (file.Exists && file.Extension.EndsWith(".json"))
             {
-                FileInfo file = new FileInfo(filePath);
-                if (file.Exists && file.Extension.EndsWith(".json"))
+                List<CoordinateRequestDto> pointList = JsonConvert.DeserializeObject<List<CoordinateRequestDto>>(System.IO.File.ReadAllText(filePath));
+                setUser();
+                await _pointManager.AddPoints(pointList, _userId);
+
+                response.Data = Constants.CoordinateUploadedMessage;
+                response.MetaData = new ResponseMetaData
                 {
-                    List<CoordinateRequestDto> pointList = JsonConvert.DeserializeObject<List<CoordinateRequestDto>>(System.IO.File.ReadAllText(filePath));
-                    setUser();
-                    if(await _pointManager.AddPoints(pointList, _userId))
-                    {
-                        response.Data = GlobalConstant.CoordinateUploadedMessage;
-                        response.MetaData = new ResponseMetaData
-                        {
-                            Code = GlobalConstant.SuccessCode
-                        };
-                    }
-                }
-                else
-                {
-                    response.Data = string.Empty;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.ErrorCode,
-                        Message = GlobalConstant.FileExtensionErrorMessage
-                    };
-                }
+                    Code = Constants.SuccessCode
+                };
+
             }
-            catch (Exception ex)
+            else
             {
                 response.Data = string.Empty;
                 response.MetaData = new ResponseMetaData
                 {
-                    Code = GlobalConstant.ErrorCode,
-                    Message = ex.Message
+                    Code = Constants.ErrorCode,
+                    Message = Constants.FileExtensionErrorMessage
                 };
             }
+
             return response;
         }
+
+        #region Private Method
+
+        /// <summary>
+        /// Setting the userId
+        /// </summary>
+        private void setUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var user = identity.Claims;
+
+                _userId = Convert.ToInt32(user.FirstOrDefault(o => o.Type == "Id")?.Value);
+            }
+        }
+        #endregion
     }
 }

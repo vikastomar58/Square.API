@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Squares.API.DataLayer.Core.Repository;
 using Squares.API.DataLayer.Entities;
+using Squares.API.Domain.Constant;
 using Squares.API.Domain.Dto;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -26,16 +28,13 @@ namespace Squares.API.Domain.Manager
         /// <param name="coordinatesDto"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<bool> AddPoints(List<CoordinateRequestDto> coordinatesDto, int userId)
+        public async Task AddPoints(List<CoordinateRequestDto> coordinatesDto, int userId)
         {
             List<Coordinate> listCoordinates = _mapper.Map<List<Coordinate>>(coordinatesDto);
 
             listCoordinates.ForEach(x => x.UserId = userId);
 
             await _coordinateRepositroy.AddRangeAsync(listCoordinates);
-
-            return true;
-
         }
 
         /// <summary>
@@ -44,17 +43,14 @@ namespace Squares.API.Domain.Manager
         /// <param name="coordinateDto"></param>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public async Task<bool> Delete(CoordinateRequestDto coordinateDto, int userId)
+        public async Task Delete(CoordinateRequestDto coordinateDto, int userId)
         {
             var data = await _coordinateRepositroy.FindSingleAsync(x => x.X == coordinateDto.X && x.Y == coordinateDto.Y && x.UserId == userId);
 
             if (data != null)
             {
                 await _coordinateRepositroy.Delete(data);
-
-                return true;
             }
-            return false;
         }
 
 

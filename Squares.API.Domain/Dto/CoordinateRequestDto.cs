@@ -6,11 +6,11 @@ namespace Squares.API.Domain.Dto
     public class CoordinateRequestDto
     {
         [DataMember(Name = "x")]
-        [Required(ErrorMessage = "Cordinate X is required")]
+        [Required(ErrorMessage = "Coordinate X is required")]
         public int X { get; set; }
 
         [DataMember(Name = "y")]
-        [Required(ErrorMessage = "Cordinate X is required")]
+        [Required(ErrorMessage = "Coordinate Y is required")]
         public int Y { get; set; }
     }
 }

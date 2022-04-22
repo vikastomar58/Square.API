@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Squares.API.Domain.Constant;
 using Squares.API.Domain.Dto;
-using Squares.API.Domain.Helper;
 using Squares.API.Domain.Manager;
 using System;
 using System.Threading.Tasks;
@@ -18,11 +18,11 @@ namespace Squares.API.Controllers
     [AllowAnonymous]
     public class RegisterController : ControllerBase
     {
-        private readonly IRegistrationManager _registrationManager;
+        private readonly IIdentityManager _identityManager;
         private readonly ITokenGeneration _tokenGeneration;
-        public RegisterController(IRegistrationManager registrationManager, ITokenGeneration tokenGeneration)
+        public RegisterController(IIdentityManager identityManager, ITokenGeneration tokenGeneration)
         {
-            _registrationManager = registrationManager;
+            _identityManager = identityManager;
             _tokenGeneration = tokenGeneration;
         }
 
@@ -33,43 +33,32 @@ namespace Squares.API.Controllers
         /// <returns></returns>
         [HttpPost]
         [Route("SignUp")]
-        [ProducesResponseType(typeof(ResponseDto),StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseDto), StatusCodes.Status500InternalServerError)]
         public async Task<ResponseDto> SignUp([FromBody] SignUpRequestDto model)
         {
             var response = new ResponseDto();
 
-            try
-            {
-                Random salt = new Random(10000);
-                model.Salt = salt.Next().ToString();
+            Random salt = new Random(10000);
+            model.Salt = salt.Next().ToString();
 
-                if (await _registrationManager.SignUp(model))
-                {
-                    response.Data = GlobalConstant.UserCreatedMessage;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.SuccessCode
-                    };
-                }
-                else
-                {
-                    response.Data = GlobalConstant.UserExistsMessage;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.SuccessCode
-                    };
-                }
-            }
-            catch(Exception ex)
+            if (await _identityManager.SignUp(model))
             {
-                response.Data = string.Empty;
+                response.Data = Constants.UserCreatedMessage;
                 response.MetaData = new ResponseMetaData
                 {
-                    Code = GlobalConstant.ErrorCode,
-                    Message=ex.Message
+                    Code = Constants.SuccessCode
                 };
             }
+            else
+            {
+                response.Data = Constants.UserExistsMessage;
+                response.MetaData = new ResponseMetaData
+                {
+                    Code = Constants.SuccessCode
+                };
+            }
+
             return response;
         }
 
@@ -86,35 +75,24 @@ namespace Squares.API.Controllers
         {
             var response = new ResponseDto();
 
-            try
+            var user = _identityManager.LogIn(model);
+            if (user != null)
             {
-                var user = _registrationManager.LogIn(model);
-                if (user != null)
-                {
-                    response.Data = _tokenGeneration.GenerateToken(user);
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.SuccessCode
-                    };
-                }
-                else
-                {
-                    response.Data = GlobalConstant.UserNotExistsMessage;
-                    response.MetaData = new ResponseMetaData
-                    {
-                        Code = GlobalConstant.SuccessCode
-                    };
-                }
-            }
-            catch (Exception ex)
-            {
-                response.Data = string.Empty;
+                response.Data = _tokenGeneration.GenerateToken(user);
                 response.MetaData = new ResponseMetaData
                 {
-                    Code = GlobalConstant.ErrorCode,
-                    Message = ex.Message
+                    Code = Constants.SuccessCode
                 };
             }
+            else
+            {
+                response.Data = Constants.UserNotExistsMessage;
+                response.MetaData = new ResponseMetaData
+                {
+                    Code = Constants.SuccessCode
+                };
+            }
+
             return response;
         }
     }

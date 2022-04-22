@@ -55,5 +55,10 @@
             <param name="filePath">File format and extension must be json</param>
             <returns></returns>
         </member>
+        <member name="M:Squares.API.Controllers.SquareController.setUser">
+            <summary>
+            Setting the userId
+            </summary>
+        </member>
     </members>
 </doc>
