@@ -16,16 +16,16 @@ using Xunit;
 
 namespace Squares.API.Test.Unit_Test_Cases
 {
-    public class PointManagerTest
+    public class PointManagerTests
     {
         private readonly IPointManager _pointManager;
         private readonly IMapper _mapper;
         private readonly Mock<IEfRepository<Coordinate>> _efRepositoryCoordinate;
 
-        public PointManagerTest()
+        public PointManagerTests()
         {
             _mapper = new MapperConfiguration(c =>
-                              c.AddProfile<MappingClass>()).CreateMapper();
+                              c.AddProfile<MapperProfile>()).CreateMapper();
             _efRepositoryCoordinate = new Mock<IEfRepository<Coordinate>>();
 
             _pointManager = new PointManager(_efRepositoryCoordinate.Object, _mapper);
@@ -36,9 +36,8 @@ namespace Squares.API.Test.Unit_Test_Cases
         {
             _efRepositoryCoordinate.Setup(s => s.AddRangeAsync(It.IsAny<List<Coordinate>>())).Verifiable();
 
-            var result = _pointManager.AddPoints(GlobalData.GetListCoordinateRequestDto(), 1).Result;
-
-            Assert.True(result);
+            Should.NotThrow(async () =>
+            await _pointManager.AddPoints(GlobalData.GetListCoordinateRequestDto(), 1));
         }
 
         [Fact]
@@ -58,9 +57,9 @@ namespace Squares.API.Test.Unit_Test_Cases
 
             _efRepositoryCoordinate.Setup(s => s.Delete(It.IsAny<Coordinate>())).Verifiable();
 
-            var result = _pointManager.Delete(new CoordinateRequestDto { X = 1, Y = 1 }, 1).Result;
+            Should.NotThrow(async () =>
+            await _pointManager.Delete(new CoordinateRequestDto { X = 1, Y = 1 }, 1));
 
-            Assert.True(result);
         }
 
 
@@ -77,11 +76,11 @@ namespace Squares.API.Test.Unit_Test_Cases
         [Fact]
         public void DeleteDataNotFoundTest_Success()
         {
-            _efRepositoryCoordinate.Setup(s => s.FindSingleAsync(It.IsAny<Expression<Func<Coordinate, bool>>>())).Verifiable();
+            _efRepositoryCoordinate.Setup(s => s.FindSingleAsync(It.IsAny<Expression<Func<Coordinate, bool>>>())).ReturnsAsync(GlobalData.GetListCoordinates().First());
 
-            var result = _pointManager.Delete(new CoordinateRequestDto { X = 1, Y = 1 }, 1).Result;
+            Should.NotThrow(async () =>
+            await _pointManager.Delete(new CoordinateRequestDto { X = 1, Y = 1 }, 1));
 
-            Assert.False(result);
         }
 
         [Fact]

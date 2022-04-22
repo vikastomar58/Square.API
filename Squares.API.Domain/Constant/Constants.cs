@@ -1,6 +1,6 @@
-﻿namespace Squares.API.Domain.Helper
+﻿namespace Squares.API.Domain.Constant
 {
-    public static class GlobalConstant
+    public static class Constants
     {
         public static readonly string SuccessCode = "S01";
 

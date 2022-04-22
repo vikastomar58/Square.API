@@ -1,11 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Squares.API
 {
@@ -13,7 +9,13 @@ namespace Squares.API
     {
         public static void Main(string[] args)
         {
+            Log.Logger = new LoggerConfiguration()
+            .WriteTo.File($"../Log/Api-log-{DateTime.Now.Date.ToString("dd-MM-yyyy")}.txt")
+            .CreateLogger();
+
             CreateHostBuilder(args).Build().Run();
+
+            Log.CloseAndFlush();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -21,6 +23,6 @@ namespace Squares.API
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
+                }).UseSerilog();
     }
 }

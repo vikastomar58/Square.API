@@ -40,13 +40,13 @@ namespace Squares.API.Test.FixtureData
                 new Coordinate
                 {
                     X=1,
-                     Y=-1,
+                     Y=1,
                      UserId=1
                 },
                 new Coordinate
                 {
                     X=1,
-                    Y=1,
+                    Y=-1,
                      UserId=1
                 },
                 new Coordinate
@@ -68,9 +68,9 @@ namespace Squares.API.Test.FixtureData
         {
             return new SignUpRequestDto
             {
-                Email="test@gmail.com",
-                FirstName="Test",
-                Password="Test@123"
+                Email = "test@gmail.com",
+                FirstName = "Test",
+                Password = "Test@123"
             };
         }
 
@@ -81,7 +81,7 @@ namespace Squares.API.Test.FixtureData
                 Email = "test@gmail.com",
                 FirstName = "Test",
                 Password = "wEWyPwhjpVqWAhb3optsy0AqVUbMzjSjdzeUjzDPiKk=",
-                Salt="2334243"
+                Salt = "2334243"
             };
         }
 

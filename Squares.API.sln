@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Squares.API.Domain", "Squar
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TestCases", "TestCases", "{045B1C7A-EF2B-430A-AB00-DEBA613BC25D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Squares.API.Test", "Squares.API.Test\Squares.API.Test.csproj", "{45D4FA46-2025-49F1-85D6-A8B04BB85B74}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Squares.API.Domain.Test", "Squares.API.Test\Squares.API.Domain.Test.csproj", "{45D4FA46-2025-49F1-85D6-A8B04BB85B74}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

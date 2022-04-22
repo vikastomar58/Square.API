@@ -12,6 +12,7 @@ using Squares.API.DataLayer.Core.Repository;
 using Squares.API.DataLayer.EntityFrameworkCore;
 using Squares.API.Domain.Manager;
 using Squares.API.Domain.Mapping;
+using Squares.API.Middelwares;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -34,7 +35,7 @@ namespace Squares.API
         {
             services.AddControllers();
 
-            services.AddScoped<IRegistrationManager, RegistrationManager>();
+            services.AddScoped<IIdentityManager, IdentityManager>();
 
             services.AddScoped<ITokenGeneration, TokenGeneration>();
             services.AddScoped<IPointManager, PointManager>();
@@ -47,7 +48,7 @@ namespace Squares.API
 
             var mappingConfig = new MapperConfiguration(mc =>
             {
-                mc.AddProfile(new MappingClass());
+                mc.AddProfile(new MapperProfile());
             });
 
             IMapper mapper = mappingConfig.CreateMapper();
@@ -130,6 +131,10 @@ namespace Squares.API
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            app.UseMiddleware<RequestResponseLoggingMiddleware>();
+
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseEndpoints(endpoints =>
             {

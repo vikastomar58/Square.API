@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Squares.API.Domain.Manager
 {
-   public interface IRegistrationManager
+   public interface IIdentityManager
     {
         Task<bool> SignUp(SignUpRequestDto signUpRequest);
 
